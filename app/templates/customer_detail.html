@@ -14,8 +14,10 @@
       <li class="list-group-item">Продавец {{ customer.user.username }}</li>
     </ul>
     <div class="card-body">
+      {% if current_user.is_authenticated and current_user.id == customer.user.id %}
       <a href="{{ url_for('customer_delete', customer_id=customer.id) }}" class="card-link">Удалить запись</a>
       <a href="{{ url_for('customer_update', customer_id=customer.id) }}" class="card-link">Изменить запись</a>
+      {% endif %}
     </div>
   </div>
 </div>

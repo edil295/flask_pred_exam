@@ -18,7 +18,7 @@ class CustomerForm(FlaskForm):
     item = wf.StringField(label='Наименование товара')
     quantity = wf.IntegerField(label='Количество товара')
     price = wf.IntegerField(label='Цена за ед. товара')
-    date_in = wf.DateField(label='Дата прибытия товара')
+    date_in = wf.DateField(label='Дата прибытия товара', format='%Y-%m-%d')
     user = wf.SelectField(label='Пользователь', choices=get_users(), coerce=int)
     submit = wf.SubmitField(label='Подтвердить')
 

@@ -3,6 +3,7 @@ from app import app, db
 from app.models import Customers, User
 from app import forms
 from flask_login import login_user, logout_user, login_required
+from datetime import datetime
 # post functions
 
 
@@ -21,10 +22,11 @@ def customer_create():
             item = request.form.get('item')
             quantity = request.form.get('quantity')
             price = request.form.get('price')
-            data_in = request.form.get('data_in')
+            date_in = request.form.get('date_in')
+            data = datetime.strptime(date_in, '%Y-%m-%d')
             user = request.form.get('user')
             new_customer = Customers(name=name, phone_number=phone_number, item=item, quantity=quantity,
-                                     price=price, data_in=data_in, user_id=user)
+                                     price=price, date_in=data, user_id=user)
             db.session.add(new_customer)
             db.session.commit()
             return redirect(url_for('index'))
@@ -74,14 +76,15 @@ def customer_update(customer_id):
                 item = request.form.get('item')
                 quantity = request.form.get('quantity')
                 price = request.form.get('price')
-                data_in = request.form.get('data_in')
+                date_in = request.form.get('date_in')
+                date = datetime.strptime(date_in, '%Y-%m-%d')
                 user = request.form.get('user')
                 customer.name = name
                 customer.phone_number = phone_number
                 customer.item = item
                 customer.quantity = quantity
                 customer.price = price
-                customer.data_in = data_in
+                customer.date_in = date
                 customer.user_id = user
                 db.session.commit()
                 flash('Данные успешно изменены', category='success')
@@ -116,13 +119,12 @@ def register():
 
 def login():
     form = forms.UserForm()
-
     if request.method == 'POST':
         # if form.validate_on_submit():
         user = User.query.filter_by(username=request.form.get('username')).first()
         if user and user.check_password(request.form.get('password')):
             login_user(user)
-            flash('Вы успешно аутентентифицировались', category='succes')
+            flash('Вы успешно аутентентифицировались', category='success')
             return redirect(url_for('index'))
         else:
             flash('Неверный логин или пароль', category='danger')
