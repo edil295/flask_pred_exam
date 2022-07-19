@@ -14,11 +14,12 @@ class Customers(db.Model):
     item = db.Column(db.String(64))
     quantity = db.Column(db.Integer())
     price = db.Column(db.Integer())
+    date_in = db.Column(db.Date())
     user = db.relationship('User', backref=db.backref('customers'))
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
 
 
-class User(db.Model):
+class User(UserMixin, db.Model):
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(32))
     password_hash = db.Column(db.String(44))

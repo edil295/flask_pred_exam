@@ -25,8 +25,9 @@
           <td>{{ customer.item }}</td>
           <td>{{ customer.quantity }}</td>
           <td>{{ customer.price }}</td>
+          <td>{{ customer.date_in }}</td>
           <td>{{ customer.user.username }}</td>
-          <td><a class="btn btn-outline-primary" href="#">Подробнее</a></td>
+          <td><a class="btn btn-outline-primary" href="{{ url_for('customer_detail', customer_id=customer.id) }}">Подробнее</a></td>
         </tr>
       {% endfor %}
       </tbody>

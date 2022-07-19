@@ -7,13 +7,13 @@ from flask_login import login_user, logout_user, login_required
 
 
 def index():
-    custom = Customers.query.all()
-    return render_template('index.html', custom=custom)
+    customers = Customers.query.all()
+    return render_template('index.html', customers=customers)
 
 
 @login_required
 def customer_create():
-    form = forms.CustomerFormForm()
+    form = forms.CustomerForm()
     if request.method == 'POST':
         if form.validate_on_submit():
             name = request.form.get('name')
@@ -21,9 +21,10 @@ def customer_create():
             item = request.form.get('item')
             quantity = request.form.get('quantity')
             price = request.form.get('price')
+            data_in = request.form.get('data_in')
             user = request.form.get('user')
             new_customer = Customers(name=name, phone_number=phone_number, item=item, quantity=quantity,
-                                     price=price, user_id=user)
+                                     price=price, data_in=data_in, user_id=user)
             db.session.add(new_customer)
             db.session.commit()
             return redirect(url_for('index'))
@@ -35,9 +36,10 @@ def customer_create():
 
 
 def customer_detail(customer_id):
+    form = forms.CustomerForm()
     customer = Customers.query.filter_by(id=customer_id).first()
     if customer:
-        return render_template('customer_detail.html', customer=customer)
+        return render_template('customer_detail.html', customer=customer, form=form)
     else:
         flash('customer not field', category='danger')
         return redirect(url_for('index'))
@@ -72,12 +74,14 @@ def customer_update(customer_id):
                 item = request.form.get('item')
                 quantity = request.form.get('quantity')
                 price = request.form.get('price')
+                data_in = request.form.get('data_in')
                 user = request.form.get('user')
                 customer.name = name
                 customer.phone_number = phone_number
                 customer.item = item
                 customer.quantity = quantity
                 customer.price = price
+                customer.data_in = data_in
                 customer.user_id = user
                 db.session.commit()
                 flash('Данные успешно изменены', category='success')
@@ -95,26 +99,26 @@ def customer_update(customer_id):
 
 
 def register():
-    user_form = forms.UserForm()
+    form = forms.UserForm()
     if request.method == 'POST':
-        if user_form.validate_on_submit():
-            username = request.form.get('username')
-            password = request.form.get('password_hash')
-            new_user = User(username=username, password_hash=password)
-            db.session.add(new_user)
+        if form.validate_on_submit():
+            user = User(username=request.form.get('username'), password=request.form.get('password'))
+            db.session.add(user)
             db.session.commit()
-            flash('Пользователь успешно зарегестрирован', category='success')
-            return redirect(url_for('login'))
-        if user_form.errors:
-            for errors in user_form.errors:
+            flash('Вы успешно зарегестрировались', category='success')
+            return redirect(url_for('index'))
+        if form.errors:
+            for errors in form.errors.values():
                 for error in errors:
-                    flash(error, category="danger")
-    return render_template('register.html', form=user_form)
+                    flash(error, category='danger')
+    return render_template('register.html', form=form)
 
 
 def login():
     form = forms.UserForm()
+
     if request.method == 'POST':
+        # if form.validate_on_submit():
         user = User.query.filter_by(username=request.form.get('username')).first()
         if user and user.check_password(request.form.get('password')):
             login_user(user)
@@ -128,4 +132,9 @@ def login():
                     flash(error, category='danger')
     return render_template('login.html', form=form)
 
+
+def logout():
+    logout_user()
+    flash('Вы вышли из учетной записи', category='success')
+    return redirect(url_for('index'))
 

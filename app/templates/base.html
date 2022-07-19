@@ -25,7 +25,7 @@
           </a>
           <div class="dropdown-menu" aria-labelledby="navbarDropdown">
             <a class="dropdown-item" href="{{ url_for('customer_create') }}">Добавить нового клиента</a>
-            <a class="dropdown-item" href="">Выйти из учетной записи</a>
+            <a class="dropdown-item" href="{{ url_for('logout') }}">Выйти из учетной записи</a>
             <div class="dropdown-divider"></div>
             <a class="dropdown-item" href="{{ url_for('login') }}">Войти в учетную запись</a>
             <a class="dropdown-item" href="{{ url_for('register') }}">Зарегисрироваться</a>

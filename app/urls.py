@@ -12,3 +12,4 @@ app.add_url_rule('/customer/<int:customer_id>/update', view_func=views.customer_
 
 app.add_url_rule('/register', view_func=views.register, methods=['GET', 'POST'], endpoint='register')
 app.add_url_rule('/login', view_func=views.login, methods=['GET', 'POST'], endpoint='login')
+app.add_url_rule('/logout', view_func=views.logout, methods=['GET', 'POST'], endpoint='logout')

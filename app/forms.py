@@ -4,7 +4,6 @@ from wtforms import validators
 from app.models import User, Customers
 
 
-
 def get_users():
     users = []
     for user in User.query.all():
@@ -19,12 +18,19 @@ class CustomerForm(FlaskForm):
     item = wf.StringField(label='Наименование товара')
     quantity = wf.IntegerField(label='Количество товара')
     price = wf.IntegerField(label='Цена за ед. товара')
+    date_in = wf.DateField(label='Дата прибытия товара')
     user = wf.SelectField(label='Пользователь', choices=get_users(), coerce=int)
     submit = wf.SubmitField(label='Подтвердить')
 
 
 class UserForm(FlaskForm):
-    username = wf.StringField(label='Имя пользователя')
-    password_hash = wf.PasswordField(label='Пароль')
-    submit = wf.SubmitField(label='Добавить')
+    username = wf.StringField(label='Имя пользоватля', validators=[
+        validators.DataRequired(),
+        validators.Length(min=3, max=64)
+    ])
+    password = wf.PasswordField(label='Пароль', validators=[
+        validators.DataRequired(),
+        validators.Length(min=3, max=64)
+    ])
+    submit = wf.SubmitField(label='Подтвердить')
 

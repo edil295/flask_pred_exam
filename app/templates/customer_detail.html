@@ -14,8 +14,8 @@
       <li class="list-group-item">Продавец {{ customer.user.username }}</li>
     </ul>
     <div class="card-body">
-      <a href="#" class="card-link">Удалить запись</a>
-      <a href="#" class="card-link">Изменить запись</a>
+      <a href="{{ url_for('customer_delete', customer_id=customer.id) }}" class="card-link">Удалить запись</a>
+      <a href="{{ url_for('customer_update', customer_id=customer.id) }}" class="card-link">Изменить запись</a>
     </div>
   </div>
 </div>
